@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
 
-interface IUser extends mongoose.Document{  
+export interface IUser extends mongoose.Document{  
     username: string;
     createdAt: Date;
+    elo: number[];
 }
 
 const UserSchema = new mongoose.Schema({

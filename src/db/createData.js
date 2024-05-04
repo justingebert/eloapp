@@ -38,19 +38,18 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = require("mongoose");
 var User_1 = require("./models/User");
-require('dotenv').config({ path: './.env.local' });
+require('dotenv').config({ path: '../../.env.local' });
 var MONGODB_URI = process.env.MONGODB_URI;
-/* if (!MONGODB_URI) {
-  throw new Error(
-    "Please define the MONGODB_URI environment variable inside .env.local",
-  );
-} */
-mongoose_1.default.connect('mongodb://localhost:27017/eloapp', {});
+if (!MONGODB_URI) {
+    throw new Error("Please define the MONGODB_URI environment variable inside .env.local");
+}
 var createData = function () { return __awaiter(void 0, void 0, void 0, function () {
     var users;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0:
+            case 0: return [4 /*yield*/, mongoose_1.default.connect(MONGODB_URI, {})];
+            case 1:
+                _a.sent();
                 users = [
                     {
                         username: "Justin",
@@ -72,10 +71,10 @@ var createData = function () { return __awaiter(void 0, void 0, void 0, function
                     },
                 ];
                 return [4 /*yield*/, User_1.default.deleteMany({})];
-            case 1:
+            case 2:
                 _a.sent();
                 return [4 /*yield*/, User_1.default.insertMany(users)];
-            case 2:
+            case 3:
                 _a.sent();
                 return [2 /*return*/];
         }

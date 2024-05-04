@@ -9,6 +9,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from 'next/navigation'
 
 interface User {
   username: string;
@@ -27,6 +30,7 @@ const TeamSelectionPage = () => {
     winningTeam: [],
     losingTeam: [],
   });
+  const router = useRouter()
 
   useEffect(() => {
     const fetchPlayers = async () => {
@@ -44,7 +48,11 @@ const TeamSelectionPage = () => {
     fetchPlayers();
   }, []);
 
-  const handleSelectPlayer = (team: "winningTeam" | "losingTeam", index: number, player: string) => {
+  const handleSelectPlayer = (
+    team: "winningTeam" | "losingTeam",
+    index: number,
+    player: string
+  ) => {
     setSelectedPlayers((prevSelected) => {
       const newSelected = { ...prevSelected };
       newSelected[team][index] = player;
@@ -66,17 +74,24 @@ const TeamSelectionPage = () => {
       } else {
         console.error("Error:", response.statusText);
       }
+      router.push('/')
     } catch (error) {
       console.error("Error submitting:", error);
     }
   };
 
   const userSelector = (team: "winningTeam" | "losingTeam", index: number) => {
-    const selected = [...selectedPlayers.winningTeam, ...selectedPlayers.losingTeam];
+    const selected = [
+      ...selectedPlayers.winningTeam,
+      ...selectedPlayers.losingTeam,
+    ];
     const selectedValue = selectedPlayers[team][index] || "";
 
     return (
-      <Select value={selectedValue} onValueChange={(player) => handleSelectPlayer(team, index, player)}>
+      <Select
+        value={selectedValue}
+        onValueChange={(player) => handleSelectPlayer(team, index, player)}
+      >
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Select player">
             {selectedValue ? selectedValue : "Select a player"}
@@ -96,16 +111,23 @@ const TeamSelectionPage = () => {
   };
 
   return (
-    <div>
-      <h2>Winning Team</h2>
-      <div>{userSelector("winningTeam", 0)}</div>
-      <div>{userSelector("winningTeam", 1)}</div>
-
-      <h2>Losing Team</h2>
-      <div>{userSelector("losingTeam", 0)}</div>
-      <div>{userSelector("losingTeam", 1)}</div>
-
-      <Button onClick={handleSubmit}>Submit</Button>
+    <div className="flex flex-col items-center justify-center gap-6 p-4">
+      <Link href="/" className="self-start mb-4">
+        <ArrowLeft size={24} />
+      </Link>
+      <div className="flex flex-col gap-4">
+        <h2 className="text-center">Winning Team</h2>
+        {userSelector("winningTeam", 0)}
+        {userSelector("winningTeam", 1)}
+      </div>
+      <div className="flex flex-col gap-4">
+        <h2 className="text-center">Losing Team</h2>
+        {userSelector("losingTeam", 0)}
+        {userSelector("losingTeam", 1)}
+      </div>
+      <div className="mt-6">
+        <Button onClick={handleSubmit}>Submit</Button>
+      </div>
     </div>
   );
 };

@@ -1,20 +1,21 @@
 import mongoose from "mongoose";
 import User from "./models/User";
-require('dotenv').config({ path: './.env.local' });
+require('dotenv').config({ path: '../../.env.local' });
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
-/* if (!MONGODB_URI) {
+if (!MONGODB_URI) {
   throw new Error(
     "Please define the MONGODB_URI environment variable inside .env.local",
   );
-} */
+}
 
-mongoose.connect('mongodb://localhost:27017/eloapp', {
-});
+
 
 const createData = async () => {
     
+  await mongoose.connect(MONGODB_URI, {});
+
     const users = [
         {
           username: "Justin",
