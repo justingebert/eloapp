@@ -75,6 +75,7 @@ const TeamSelectionPage = () => {
         console.error("Error:", response.statusText);
       }
       router.push('/')
+      router.refresh()
     } catch (error) {
       console.error("Error submitting:", error);
     }
