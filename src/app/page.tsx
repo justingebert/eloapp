@@ -96,7 +96,7 @@ export default async function Home() {
                 </Link>
             </div>
             <div className="flex items-center justify-center mt-20">
-                <Link href="/create-player">
+                <Link href="/createplayer">
                     <Button variant={"secondary"}>Create Player</Button>
                 </Link>
             </div>
