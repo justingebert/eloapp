@@ -44,7 +44,7 @@ export default async function Home() {
     };
 
     // Function to display the streak with an arrow icon
-    const displayStreak = (streakData) => {
+    const displayStreak = (streakData:any) => {
         if (streakData.streak < 2) return "-";
         const Arrow = streakData.type === "up" ? ArrowUp : ArrowDown;
         const color = streakData.type === "up" ? "green" : "red";
