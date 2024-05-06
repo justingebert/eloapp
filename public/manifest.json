@@ -1,6 +1,6 @@
 {
-    "name": "My awesome PWA app",
-    "short_name": "PWA App",
+    "name": "eloapp",
+    "short_name": "eloapp",
     "icons": [
       {
         "src": "/icons/web/icon-512-maskable.png",
