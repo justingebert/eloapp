@@ -23,6 +23,7 @@ const CreateUserPage = () => {
             if (response.ok) {
                 console.log("User created:", await response.json());
                 router.push("/")
+                router.refresh()
             } else {
                 console.error("Failed to create user");
             }
