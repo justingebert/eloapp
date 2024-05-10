@@ -5,10 +5,15 @@ import dbConnect from "@/db/dbConnect";
 import User, { IUser } from '@/db/models/User';
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
+import { get } from 'http';
+
+async function getUsers(){
+    const res = await fetch('http://localhost:3000/api/players', { cache: 'no-store' });
+    return res.json();
+}
 
 export default async function Home() {
-    await dbConnect();
-    let users: IUser[] = await User.find({});
+    let users: IUser[] = await getUsers();
 
     // Sort users by the last ELO
     users.sort((a, b) => (b.elo[b.elo.length - 1] || 100) - (a.elo[a.elo.length - 1] || 100));
@@ -20,7 +25,9 @@ export default async function Home() {
         }
         const latest = elo[elo.length - 1];
         const previous = elo[elo.length - 2];
-        return latest - previous;
+        const difference = latest - previous;
+        const color = difference > 0 ? "green" : difference < 0 ? "red" : "black";
+        return <div style={{ color }}>{difference}</div>;
     };
 
     // Function to calculate winning or losing streaks
