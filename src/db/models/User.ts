@@ -22,7 +22,8 @@ const UserSchema = new mongoose.Schema({
 });
 
 UserSchema.methods.addElo = function (elo: number) {
-    this.elo.push(elo);
+    const adjustedElo = Math.max(elo, 0);
+    this.elo.push(adjustedElo);
     return this.save();
 }
 
