@@ -9,9 +9,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 
 interface User {
   username: string;
@@ -30,7 +37,9 @@ const TeamSelectionPage = () => {
     winningTeam: [],
     losingTeam: [],
   });
-  const router = useRouter()
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [eloResults, setEloResults] = useState<Record<string, number>>({});
+  const router = useRouter();
 
   useEffect(() => {
     const fetchPlayers = async () => {
@@ -70,12 +79,13 @@ const TeamSelectionPage = () => {
         body: JSON.stringify(selectedPlayers),
       });
       if (response.ok) {
-        console.log("Success:", await response.json());
+        const data = await response.json();
+        console.log("Success:", data);
+        setEloResults(data);
+        setDialogOpen(true);
       } else {
         console.error("Error:", response.statusText);
       }
-      router.push('/')
-      router.refresh()
     } catch (error) {
       console.error("Error submitting:", error);
     }
@@ -111,6 +121,38 @@ const TeamSelectionPage = () => {
     );
   };
 
+  const displayEloChanges = () => (
+    <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>ELO Changes</AlertDialogTitle>
+        </AlertDialogHeader>
+        <div className="flex flex-col gap-2">
+          {Object.entries(eloResults).map(([username, eloChange]) => (
+            <div
+              key={username}
+              className="flex justify-between items-center"
+            >
+              <span>{username}</span>
+              <span className={eloChange > 0 ? "text-green-500" : "text-red-500"}>
+                {eloChange > 0 ? "+" : ""}
+                {eloChange.toFixed(2)}
+              </span>
+            </div>
+          ))}
+        </div>
+        <AlertDialogFooter>
+          <Button onClick={closeDialog}>OK</Button>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+
+  const closeDialog = () => {
+    setDialogOpen(false);
+    router.push('/');
+  };
+
   return (
     <div className="flex flex-col items-center justify-center gap-6 p-4">
       <Link href="/" className="self-start mb-4">
@@ -128,6 +170,7 @@ const TeamSelectionPage = () => {
       </div>
       <div className="mt-6">
         <Button onClick={handleSubmit}>Submit</Button>
+        {dialogOpen && displayEloChanges()}
       </div>
     </div>
   );
