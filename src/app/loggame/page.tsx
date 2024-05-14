@@ -151,6 +151,7 @@ const TeamSelectionPage = () => {
   const closeDialog = () => {
     setDialogOpen(false);
     router.push('/');
+    router.refresh();
   };
 
   return (
