@@ -17,7 +17,7 @@ const UserSchema = new mongoose.Schema({
     },
     elo: {
         type: [Number],
-        default: [100]
+        default: [1000]
     },
 });
 
