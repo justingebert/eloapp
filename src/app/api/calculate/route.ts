@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import dbConnect from "@/db/dbConnect";
 import User from "@/db/models/User";
 
-export async function POST(req, res) {
+export async function POST(req:any, res:NextResponse) {
     await dbConnect();
     const data = await req.json();
     try {
