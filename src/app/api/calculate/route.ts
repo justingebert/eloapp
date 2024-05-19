@@ -1,17 +1,19 @@
-import { NextResponse } from 'next/server'
+import { NextResponse } from 'next/server';
 import dbConnect from "@/db/dbConnect";
 import User from "@/db/models/User";
 
-export async function POST(req: any, res: NextResponse) {
+export async function POST(req, res) {
     await dbConnect();
     const data = await req.json();
     try {
-        const factor = 400
+        const k = 40;
 
-        const winningUser1 = await User.findOne({ username: data.winningTeam[0] });
-        const winningUser2 = await User.findOne({ username: data.winningTeam[1] });
-        const losingUser1 = await User.findOne({ username: data.losingTeam[0] });
-        const losingUser2 = await User.findOne({ username: data.losingTeam[1] });
+        const { winningTeam, losingTeam, winningScore, losingScore } = data;
+
+        const winningUser1 = await User.findOne({ username: winningTeam[0] });
+        const winningUser2 = await User.findOne({ username: winningTeam[1] });
+        const losingUser1 = await User.findOne({ username: losingTeam[0] });
+        const losingUser2 = await User.findOne({ username: losingTeam[1] });
 
         // Retrieve the current ELO for each user
         const winningUser1Elo = winningUser1.elo[winningUser1.elo.length - 1];
@@ -19,43 +21,48 @@ export async function POST(req: any, res: NextResponse) {
         const losingUser1Elo = losingUser1.elo[losingUser1.elo.length - 1];
         const losingUser2Elo = losingUser2.elo[losingUser2.elo.length - 1];
 
-        const winningTeamElo = (winningUser1Elo + winningUser2Elo) / 2;
-        const losingTeamElo = (losingUser1Elo + losingUser2Elo) / 2;
-        
-        let ratioFactorW = losingTeamElo / winningTeamElo;
+        const T1 = (winningUser1Elo + winningUser2Elo) / 2;
+        const T2 = (losingUser1Elo + losingUser2Elo) / 2;
 
-        // Calculate the ELO differences    
-        const aMinusC = winningUser1Elo - losingUser1Elo;
-        const aMinusD = winningUser1Elo - losingUser2Elo;
-        const bMinusC = winningUser2Elo - losingUser1Elo;
-        const bMinusD = winningUser2Elo - losingUser2Elo;
+        const EW = T1 / T2;
+        const score = winningScore / (winningScore + losingScore);
 
-        const cMinusA = losingUser1Elo - winningUser1Elo;
-        const cMinusB = losingUser1Elo - winningUser2Elo;
-        const dMinusA = losingUser2Elo - winningUser1Elo;
-        const dMinusB = losingUser2Elo - winningUser2Elo;
+        function Rn(k:number, S:number, E:number) {
+            return k * (S - E);
+        }
 
+        const delta_T1 = Rn(k, score, EW);
+        const delta_T2 = Rn(k, -score, -EW);
 
-        let difW1 = (((1/(1 + Math.pow(10, aMinusC / factor))) + (1/(1 + Math.pow(10, aMinusD / factor)))) / 2 )* ratioFactorW *10;
-        let difW2 = (((1/(1 + Math.pow(10, bMinusC / factor))) + (1/(1 + Math.pow(10, bMinusD / factor)))) / 2 )* ratioFactorW *10;
-        let difL1 = -((((1/(1 + Math.pow(10, cMinusA / factor))) + (1/(1 + Math.pow(10, cMinusB / factor)))) / 2 )* ratioFactorW *10);
-        let difL2 = -((((1/(1 + Math.pow(10, dMinusA / factor))) + (1/(1 + Math.pow(10, dMinusB / factor)))) / 2 )* ratioFactorW *10);
+        let ds1, ds2, ds3, ds4;
 
-        difW1 = Math.round(difW1);
-        difW2 = Math.round(difW2);
-        difL1 = Math.round(difL1);
-        difL2 = Math.round(difL2);
+        if (score > 0.5) {
+            ds1 = (winningUser2Elo / winningUser1Elo) * delta_T1 / 2;
+            ds2 = (winningUser1Elo / winningUser2Elo) * delta_T1 / 2;
+            ds3 = (losingUser1Elo / losingUser2Elo) * delta_T2 / 2;
+            ds4 = (losingUser2Elo / losingUser1Elo) * delta_T2 / 2;
+        } else {
+            ds1 = (winningUser1Elo / winningUser2Elo) * delta_T1 / 2;
+            ds2 = (winningUser2Elo / winningUser1Elo) * delta_T1 / 2;
+            ds3 = (losingUser2Elo / losingUser1Elo) * delta_T2 / 2;
+            ds4 = (losingUser1Elo / losingUser2Elo) * delta_T2 / 2;
+        }
 
-        await winningUser1.addElo(winningUser1Elo + difW1)
-        await winningUser2.addElo(winningUser2Elo + difW2)
-        await losingUser1.addElo(losingUser1Elo + difL1)
-        await losingUser2.addElo(losingUser2Elo + difL2)
+        const eloChangeW1 = Math.round(ds1);
+        const eloChangeW2 = Math.round(ds2);
+        const eloChangeL1 = Math.round(ds3);
+        const eloChangeL2 = Math.round(ds4);
+
+        await winningUser1.addElo(winningUser1Elo + eloChangeW1);
+        await winningUser2.addElo(winningUser2Elo + eloChangeW2);
+        await losingUser1.addElo(losingUser1Elo + eloChangeL1);
+        await losingUser2.addElo(losingUser2Elo + eloChangeL2);
 
         const message = {
-            [winningUser1.username]: difW1,
-            [winningUser2.username]: difW2,
-            [losingUser1.username]: difL1,
-            [losingUser2.username]: difL2,
+            [winningUser1.username]: eloChangeW1,
+            [winningUser2.username]: eloChangeW2,
+            [losingUser1.username]: eloChangeL1,
+            [losingUser2.username]: eloChangeL2,
         };
 
         return NextResponse.json(message);

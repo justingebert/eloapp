@@ -29,6 +29,8 @@ interface User {
 interface Team {
   winningTeam: string[];
   losingTeam: string[];
+  winningScore: number | null;
+  losingScore: number | null;
 }
 
 const TeamSelectionPage = () => {
@@ -36,6 +38,8 @@ const TeamSelectionPage = () => {
   const [selectedPlayers, setSelectedPlayers] = useState<Team>({
     winningTeam: [],
     losingTeam: [],
+    winningScore: null,
+    losingScore: null,
   });
   const [dialogOpen, setDialogOpen] = useState(false);
   const [eloResults, setEloResults] = useState<Record<string, number>>({});
@@ -69,8 +73,25 @@ const TeamSelectionPage = () => {
     });
   };
 
+  const handleScoreChange = (
+    team: "winningScore" | "losingScore",
+    value: number
+  ) => {
+    if (value >= 0 && value <= 11) {
+      setSelectedPlayers((prevSelected) => ({
+        ...prevSelected,
+        [team]: value,
+      }));
+    }
+  };
+
   const handleSubmit = async () => {
     try {
+      if (selectedPlayers.winningScore === null || selectedPlayers.losingScore === null) {
+        alert("Please enter valid scores for both teams.");
+        return;
+      }
+
       const response = await fetch("/api/calculate", {
         method: "POST",
         headers: {
@@ -78,6 +99,7 @@ const TeamSelectionPage = () => {
         },
         body: JSON.stringify(selectedPlayers),
       });
+
       if (response.ok) {
         const data = await response.json();
         console.log("Success:", data);
@@ -129,14 +151,11 @@ const TeamSelectionPage = () => {
         </AlertDialogHeader>
         <div className="flex flex-col gap-2">
           {Object.entries(eloResults).map(([username, eloChange]) => (
-            <div
-              key={username}
-              className="flex justify-between items-center"
-            >
+            <div key={username} className="flex justify-between items-center">
               <span>{username}</span>
               <span className={eloChange > 0 ? "text-green-500" : "text-red-500"}>
                 {eloChange > 0 ? "+" : ""}
-                {eloChange.toFixed(2)}
+                {Number(eloChange).toFixed(2)}
               </span>
             </div>
           ))}
@@ -163,11 +182,29 @@ const TeamSelectionPage = () => {
         <h2 className="text-center">Winning Team</h2>
         {userSelector("winningTeam", 0)}
         {userSelector("winningTeam", 1)}
+        <input
+          type="number"
+          min="0"
+          max="11"
+          value={selectedPlayers.winningScore ?? ""}
+          onChange={(e) => handleScoreChange("winningScore", Number(e.target.value))}
+          placeholder="Winning Score"
+          className="w-[180px] mt-2 p-2 border rounded"
+        />
       </div>
       <div className="flex flex-col gap-4">
         <h2 className="text-center">Losing Team</h2>
         {userSelector("losingTeam", 0)}
         {userSelector("losingTeam", 1)}
+        <input
+          type="number"
+          min="0"
+          max="11"
+          value={selectedPlayers.losingScore ?? ""}
+          onChange={(e) => handleScoreChange("losingScore", Number(e.target.value))}
+          placeholder="Losing Score"
+          className="w-[180px] mt-2 p-2 border rounded"
+        />
       </div>
       <div className="mt-6">
         <Button onClick={handleSubmit}>Submit</Button>
