@@ -77,7 +77,7 @@ const TeamSelectionPage = () => {
     team: "winningScore" | "losingScore",
     value: number
   ) => {
-    if (value >= 0 && value <= 11) {
+    if (value >= 0 && value <= 20) {
       setSelectedPlayers((prevSelected) => ({
         ...prevSelected,
         [team]: value,
