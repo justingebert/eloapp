@@ -185,7 +185,7 @@ const TeamSelectionPage = () => {
         <input
           type="number"
           min="0"
-          max="11"
+          max="20"
           value={selectedPlayers.winningScore ?? ""}
           onChange={(e) => handleScoreChange("winningScore", Number(e.target.value))}
           placeholder="Winning Score"
@@ -199,7 +199,7 @@ const TeamSelectionPage = () => {
         <input
           type="number"
           min="0"
-          max="11"
+          max="20"
           value={selectedPlayers.losingScore ?? ""}
           onChange={(e) => handleScoreChange("losingScore", Number(e.target.value))}
           placeholder="Losing Score"
