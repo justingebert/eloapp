@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Elo App",
-  description: "elo app for spikeball",
+  description: "elo app for games",
   manifest: "/manifest.json",
 };
 

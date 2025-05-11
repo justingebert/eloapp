@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import User from "./models/User";
 require('dotenv').config({ path: '../../.env.local' });
 
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -38,8 +37,8 @@ const createData = async () => {
     ];
 
     
-    await User.deleteMany({});
-    await User.insertMany(users);
+    // await User.deleteMany({});
+    // await User.insertMany(users);
 }
 
 createData().then(() => {
