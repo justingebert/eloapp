@@ -4,6 +4,8 @@ import { AddGroupDrawer } from "@/components/AddGroupDrawer";
 
 
 export default function Home() {
+
+    
     const handleGroupCreated = () => {
         console.log("Group created! Refreshing list or taking other actions...");
     };

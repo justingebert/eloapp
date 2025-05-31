@@ -21,6 +21,7 @@ export async function POST(request: Request) {
         
         return new Response(JSON.stringify(group), { status: 201 });
     } catch (error) {
-        return new Response(error.message, { status: 500 });
+        console.error("Error creating group:", error);
+        return new Response("Internal Server Error", { status: 500 });
     }
 }
