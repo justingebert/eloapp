@@ -6,7 +6,6 @@ import {
     Drawer,
     DrawerClose,
     DrawerContent,
-    DrawerDescription,
     DrawerFooter,
     DrawerHeader,
     DrawerTitle,
@@ -17,7 +16,7 @@ import { toast } from "sonner";
 
 export interface AddGroupDrawerProps {
     className?: string;
-    onGroupAdded: () => void;
+    onGroupAdded: (id: string, name: string, passphrase: string, action: "created" | "joined") => void;
 }
 
 export function AddGroupDrawer({ className, onGroupAdded }: AddGroupDrawerProps) {
@@ -28,7 +27,7 @@ export function AddGroupDrawer({ className, onGroupAdded }: AddGroupDrawerProps)
     const handleSubmit = async () => {
         setIsLoading(true);
         try {
-            const response = await fetch("/api/groups/auth", {
+            const response = await fetch("/api/groups/add", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -38,16 +37,21 @@ export function AddGroupDrawer({ className, onGroupAdded }: AddGroupDrawerProps)
 
             if (!response.ok) {
                 const errorData = await response.json();
-                toast.error("Failed to add Group", {
+                toast.error("Failed to add group", {
                     description: errorData.message,
                 });
+                return;
             }
 
+            const data = await response.json();
+
+            onGroupAdded(data.id, name, passphrase, data.action);
+
+            toast.success(data.message, { position: "top-center" });
             setName("");
             setPassphrase("");
-            onGroupAdded();
         } catch (err: any) {
-            console.error("Error creating group:", err);
+            console.error("Error adding group:", err);
             toast.error("Failed to add group", {
                 description: err || "An error occurred while adding the group.",
             });
@@ -59,23 +63,18 @@ export function AddGroupDrawer({ className, onGroupAdded }: AddGroupDrawerProps)
     return (
         <Drawer>
             <DrawerTrigger asChild>
-                <Button className={className}>
-                    Add Existing Group
-                </Button>
+                <Button className={className}>Add Group</Button>
             </DrawerTrigger>
             <DrawerContent>
                 <div className="mx-auto w-full max-w-sm">
                     <DrawerHeader>
-                        <DrawerTitle>Add Existing Group</DrawerTitle>
-                        <DrawerDescription>Enter a name and passphrase of the group.</DrawerDescription>
+                        <DrawerTitle>Add Group</DrawerTitle>
                     </DrawerHeader>
                     <div className="p-4 pb-0 space-y-4">
                         <div>
-                            <label htmlFor="group-name" className="text-sm font-medium">
-                                Group Name
-                            </label>
                             <Input
                                 id="group-name"
+                                placeholder="Group Name"
                                 type="text"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
@@ -83,11 +82,9 @@ export function AddGroupDrawer({ className, onGroupAdded }: AddGroupDrawerProps)
                             />
                         </div>
                         <div>
-                            <label htmlFor="group-passphrase" className="text-sm font-medium">
-                                Passphrase
-                            </label>
                             <Input
                                 id="group-passphrase"
+                                placeholder="Passphrase"
                                 type="password"
                                 value={passphrase}
                                 onChange={(e) => setPassphrase(e.target.value)}
@@ -97,7 +94,7 @@ export function AddGroupDrawer({ className, onGroupAdded }: AddGroupDrawerProps)
                     </div>
                     <DrawerFooter>
                         <Button onClick={handleSubmit} disabled={isLoading || !name || !passphrase}>
-                            {isLoading ? "Checking..." : "Add"}
+                            {isLoading ? "Adding..." : "Add Group"}
                         </Button>
                         <DrawerClose asChild>
                             <Button variant="outline" disabled={isLoading}>

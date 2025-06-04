@@ -1,25 +1,27 @@
 "use client";
-import { CreateGroupDrawer } from "@/components/CreateGroupDrawer";
 import { AddGroupDrawer } from "@/components/AddGroupDrawer";
+import { useGroups } from "@/components/GroupProvider";
 
 
 export default function Home() {
 
+    const { 
+        saveGroup, 
+        groupsData, 
+        isLoadingGroups, 
+        hasError, 
+        refreshGroups 
+    } = useGroups();
+
     
-    const handleGroupCreated = () => {
-        console.log("Group created! Refreshing list or taking other actions...");
+    const handleGroupAdded = (id: string, name: string, passphrase: string) => {
+        saveGroup(id, name, passphrase);
+        refreshGroups();
     };
 
-    const handleGroupAdded = () => {
-        console.log("Group added! Refreshing list or taking other actions...");
-    };
 
     return (
         <div className="p-4">
-            <CreateGroupDrawer 
-                className="" 
-                onGroupCreated={handleGroupCreated} 
-            />
             <AddGroupDrawer
                 className=""
                 onGroupAdded={handleGroupAdded}

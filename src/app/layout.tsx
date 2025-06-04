@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { GroupsProvider } from "@/components/GroupProvider";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +24,7 @@ export default function RootLayout({
         <div className="m-4">
           <GroupsProvider>
           {children}
+          <Toaster />
           </GroupsProvider>
         </div>
       </body>
