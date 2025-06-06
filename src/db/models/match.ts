@@ -8,5 +8,5 @@ const MatchSchema = new Schema({
     createdAt: {type: Date, default: Date.now},
 })
 
-const Match = models.Player || model("Match", MatchSchema);
+const Match = models.Match || model("Match", MatchSchema);
 export default Match;

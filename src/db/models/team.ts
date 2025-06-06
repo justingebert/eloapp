@@ -7,5 +7,5 @@ const TeamSchema = new Schema({
     createdAt: {type: Date, default: Date.now},
 })
 
-const Team = models.Player || model("Team", TeamSchema);
+const Team = models.Team || model("Team", TeamSchema);
 export default Team;

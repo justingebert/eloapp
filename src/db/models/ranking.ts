@@ -9,5 +9,5 @@ const RankingSchema = new Schema({
     createdAt: {type: Date, default: Date.now},
 })
 
-const Ranking = models.Player  || model("Ranking", RankingSchema);
+const Ranking = models.Ranking  || model("Ranking", RankingSchema);
 export default Ranking;

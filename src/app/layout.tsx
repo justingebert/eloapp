@@ -22,7 +22,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <link rel="icon" href="/icons/web/favicon.ico" sizes="any" />
-        <div className="m-4 h-[100dvh]">
+        <div className="p-4 h-[100dvh]">
           <SWRErrorHandlingProvider>
             <GroupsProvider>
             {children}

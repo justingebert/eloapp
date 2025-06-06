@@ -98,7 +98,7 @@ export default function GroupLayout({ children }: GroupLayoutProps) {
     }
 
     return (
-        <div className="flex flex-col h-[100dvh]">
+        <div className="flex flex-col h-[96dvh]">
             {/* Header */}
             <div>
                 <div className="flex items-center justify-between">
