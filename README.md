@@ -1,4 +1,4 @@
-# ELO App 🎮
+# ELO App 📊
 
 A comprehensive game tracking and player ranking system built with Next.js. Track competitive games, manage player statistics, and view ELO-based rankings across different games and groups. Can be used for various games or sports.
 
