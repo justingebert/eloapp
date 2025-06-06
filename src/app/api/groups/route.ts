@@ -15,7 +15,6 @@ export async function POST(request: Request) {
 
         await dbConnect();
         
-        // Check if group name already exists
         const existingGroup = await Group.findOne({ name });
         if (existingGroup) {
             return new Response(JSON.stringify({ message: "Group name already exists" }), { 

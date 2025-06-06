@@ -28,6 +28,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
         const groupData = {
             id: group._id,
             name: group.name,
+            players: group.players,
             createdAt: group.createdAt,
         };
 

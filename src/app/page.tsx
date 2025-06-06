@@ -1,12 +1,12 @@
 "use client";
 import { AddGroupDrawer } from "@/components/AddGroupDrawer";
 import { useGroups } from "@/components/GroupProvider";
-import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
     const router = useRouter();
-    const { saveGroup, groupsData, isLoadingGroups, hasError, refreshGroups } = useGroups();
+    const { saveGroup, groupsData, isLoadingGroups, refreshGroups } = useGroups();
 
     const handleGroupAdded = (id: string, name: string, passphrase: string) => {
         saveGroup(id, name, passphrase);
@@ -25,15 +25,13 @@ export default function Home() {
             </div>
 
             {isLoadingGroups ? (
-                <div className="text-center py-8">
-                    <p className="text-muted-foreground">Loading groups...</p>
-                </div>
-            ) : hasError ? (
-                <div className="text-center py-8">
-                    <p className="text-destructive">Error loading groups</p>
-                    <Button onClick={refreshGroups} className="mt-2">
-                        Retry
-                    </Button>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {[...Array(3)].map((_, index) => (
+                        <div key={index} className="border rounded-lg p-4">
+                            <Skeleton className="h-6 w-3/4 mb-2" />
+                            <Skeleton className="h-4 w-1/2" />
+                        </div>
+                    ))}
                 </div>
             ) : groupsData.length === 0 ? (
                 <div className="text-center py-8">
@@ -50,7 +48,7 @@ export default function Home() {
                         >
                             <h3 className="font-semibold text-lg mb-2">{group.name}</h3>
                             <p className="text-sm text-muted-foreground">
-                                Created: {new Date(group.createdAt).toLocaleDateString()}
+                                Players: {group.players ? group.players.length : 0}
                             </p>
                         </div>
                     ))}

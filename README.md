@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# ELO App 🎮
 
-## Getting Started
+A comprehensive game tracking and player ranking system built with Next.js. Track competitive games, manage player statistics, and view ELO-based rankings across different games and groups. Can be used for various games or sports.
 
-First, run the development server:
+## 🌟 Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### 📊 Game Statistics & Rankings
+- **ELO Rating System**: Track player skill levels with dynamic ELO ratings
+- **Match History**: Complete record of all games and matches
+- **Player Statistics**: Detailed performance metrics and win/loss records
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 👥 Group Management
+- **Private Groups**: Create password-protected gaming groups
+- **Player Management**: Add and organize players within groups
+- **Multiple Games**: Support for various game types within each group
+- **Group Dashboard**: Overview of all group activities and statistics
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 🎯 Game Tracking
+- **Match Recording**: Easy-to-use interface for recording game results
+- **Team Creation**: Dynamic team formation with flexible team sizes
+- **Winner Selection**: Simple winner determination for ranking updates
+- **Real-time Updates**: Live ranking updates after each match
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### 📱 Modern UI/UX
+- **Progressive Web App (PWA)**: Install and use offline
+- **Responsive Design**: Works seamlessly on desktop and mobile
+- **Dark/Light Theme**: Toggle between themes for comfort
+- **Intuitive Interface**: Clean, modern design with smooth animations
 
-## Learn More
+## 🚀 Getting Started
 
-To learn more about Next.js, take a look at the following resources:
+### Prerequisites
+- Node.js 18+ 
+- MongoDB database
+- npm installed
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Installation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+1. **Clone the repository**
+   ```bash
+   git clone <your-repo-url>
+   cd eloapp
+   ```
 
-## Deploy on Vercel
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. **Set up environment variables**
+   Create a `.env.local` file in the root directory:
+   ```env
+   MONGODB_URI=your_mongodb_connection_string
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+4. **Run the development server**
+   ```bash
+   npm run dev
+   ```
+

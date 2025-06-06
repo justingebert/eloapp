@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { Plus } from "lucide-react";
 
 export interface AddGroupDrawerProps {
     className?: string;
@@ -20,6 +21,7 @@ export interface AddGroupDrawerProps {
 }
 
 export function AddGroupDrawer({ className, onGroupAdded }: AddGroupDrawerProps) {
+    const [isOpen, setIsOpen] = React.useState(false);
     const [name, setName] = React.useState("");
     const [passphrase, setPassphrase] = React.useState("");
     const [isLoading, setIsLoading] = React.useState(false);
@@ -46,8 +48,8 @@ export function AddGroupDrawer({ className, onGroupAdded }: AddGroupDrawerProps)
             const data = await response.json();
 
             onGroupAdded(data.id, name, passphrase, data.action);
-
-            toast.success(data.message, { position: "top-center" });
+            setIsOpen(false);
+            toast.success(data.message, { });
             setName("");
             setPassphrase("");
         } catch (err: any) {
@@ -61,9 +63,9 @@ export function AddGroupDrawer({ className, onGroupAdded }: AddGroupDrawerProps)
     };
 
     return (
-        <Drawer>
+        <Drawer open={isOpen} onOpenChange={setIsOpen}>
             <DrawerTrigger asChild>
-                <Button className={className}>Add Group</Button>
+                <Button className={className}> <Plus /></Button>
             </DrawerTrigger>
             <DrawerContent>
                 <div className="mx-auto w-full max-w-sm">
@@ -79,6 +81,11 @@ export function AddGroupDrawer({ className, onGroupAdded }: AddGroupDrawerProps)
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 disabled={isLoading}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        handleSubmit();
+                                    }
+                                }}
                             />
                         </div>
                         <div>
@@ -89,6 +96,11 @@ export function AddGroupDrawer({ className, onGroupAdded }: AddGroupDrawerProps)
                                 value={passphrase}
                                 onChange={(e) => setPassphrase(e.target.value)}
                                 disabled={isLoading}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        handleSubmit();
+                                    }
+                                }}
                             />
                         </div>
                     </div>

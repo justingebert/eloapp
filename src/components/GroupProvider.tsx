@@ -68,20 +68,15 @@ export function GroupsProvider({ children }: { children: ReactNode }) {
   }, [storedGroups, isInitialized]);
 
   const { data: groupsData, error, mutate: refreshGroups } = useSWR(
-    storedGroups.length && isInitialized ? '/api/groups/list' : null,
-    async (url) => {
+    storedGroups.length && isInitialized ? "/groups" : null,
+    async () => {
       const results = await Promise.all(
         storedGroups.map(async (group) => {
-          try {
-            const data = await groupFetcher(`/api/groups/${group.id}`, group.passphrase);
-            return { ...data, id: group.id };
-          } catch (e) {
-            console.error(`Failed to fetch group ${group.id}:`, e);
-            return null;
-          }
+          const data = await groupFetcher(`/api/groups/${group.id}`, group.passphrase);
+          return { ...data, id: group.id };
         })
       );
-      return results.filter(Boolean);
+      return results;
     },
     { 
       revalidateOnFocus: true,
