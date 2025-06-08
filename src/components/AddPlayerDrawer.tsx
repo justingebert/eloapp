@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
     Drawer,
     DrawerClose,
@@ -23,6 +23,17 @@ export default function AddPlayerDrawer({ groupId, onPlayerCreated }: AddPlayerD
     const [open, setOpen] = useState(false);
     const [name, setName] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const nameInputRef = useRef<HTMLInputElement>(null);
+
+    // Focus the first input when drawer opens
+    useEffect(() => {
+        if (open && nameInputRef.current) {
+            // Small delay to ensure the drawer is fully rendered
+            setTimeout(() => {
+                nameInputRef.current?.focus();
+            }, 100);
+        }
+    }, [open]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -62,9 +73,7 @@ export default function AddPlayerDrawer({ groupId, onPlayerCreated }: AddPlayerD
             </DrawerTrigger>
             <DrawerContent>
                 <DrawerHeader>
-                    <DrawerTitle>
-                        Add New Player
-                    </DrawerTitle>
+                    <DrawerTitle>Add New Player</DrawerTitle>
                     <DrawerDescription>Add a new player to this group.</DrawerDescription>
                 </DrawerHeader>
                 <form onSubmit={handleSubmit} className="px-4 space-y-4">
@@ -73,6 +82,7 @@ export default function AddPlayerDrawer({ groupId, onPlayerCreated }: AddPlayerD
                             Player Name
                         </label>
                         <Input
+                            ref={nameInputRef}
                             id="name"
                             type="text"
                             placeholder="Enter player name"

@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Plus, Gamepad2 } from "lucide-react";
 
 interface AddGameDrawerProps {
@@ -29,6 +29,17 @@ export default function AddGameDrawer({ groupId, onGameCreated }: AddGameDrawerP
         icon: "",
         teamsize: "0",
     });
+    const nameInputRef = useRef<HTMLInputElement>(null);
+
+    // Focus the first input when drawer opens
+    useEffect(() => {
+        if (isOpen && nameInputRef.current) {
+            // Small delay to ensure the drawer is fully rendered
+            setTimeout(() => {
+                nameInputRef.current?.focus();
+            }, 100);
+        }
+    }, [isOpen]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -80,9 +91,7 @@ export default function AddGameDrawer({ groupId, onGameCreated }: AddGameDrawerP
             </DrawerTrigger>
             <DrawerContent>
                 <DrawerHeader>
-                    <DrawerTitle>
-                        Create New Game
-                    </DrawerTitle>
+                    <DrawerTitle>Create New Game</DrawerTitle>
                     <DrawerDescription>
                         Add a new game to your group. Games help organize matches and track rankings.
                     </DrawerDescription>
@@ -93,6 +102,7 @@ export default function AddGameDrawer({ groupId, onGameCreated }: AddGameDrawerP
                             Game Name *
                         </label>
                         <Input
+                            ref={nameInputRef}
                             id="name"
                             type="text"
                             placeholder="e.g., Table Tennis, Spikeball, Mario Kart..."
@@ -149,18 +159,13 @@ export default function AddGameDrawer({ groupId, onGameCreated }: AddGameDrawerP
 
                     <DrawerFooter className="-p-6">
                         <Button type="submit" disabled={isLoading}>
-                                {isLoading ? "Creating..." : "Create Game"}
+                            {isLoading ? "Creating..." : "Create Game"}
                         </Button>
                         <DrawerClose asChild>
-                            <Button
-                                type="button"
-                                variant="outline"
-                                disabled={isLoading}
-                            >
+                            <Button type="button" variant="outline" disabled={isLoading}>
                                 Cancel
                             </Button>
                         </DrawerClose>
-                        
                     </DrawerFooter>
                 </form>
             </DrawerContent>
