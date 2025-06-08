@@ -1,6 +1,7 @@
 import dbConnect from "@/db/dbConnect";
 import Game from "@/db/models/game";
 import Group from "@/db/models/group";
+import Player from "@/db/models/player";
 
 export async function GET(request: Request, { params }: { params: { id: string } }) {
     try {
@@ -16,7 +17,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
             });
         }
 
-        const games = await Game.find({ group: groupId }).populate("players");
+        const games = await Game.find({ group: groupId }).populate({ path:"players", model: Player});
 
         return new Response(JSON.stringify(games), {
             status: 200,
