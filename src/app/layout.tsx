@@ -20,6 +20,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+      </head>
       <body className={inter.className}>
         <link rel="icon" href="/icons/web/favicon.ico" sizes="any" />
         <div className="p-4 h-[100dvh]">
